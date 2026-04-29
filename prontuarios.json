@@ -1,0 +1,12 @@
+[
+{
+    "id": "001", 
+    "consulta_id": "001", 
+    "paciente_nome": "João Silva", 
+    "medico_nome": "Dr. Carlos", 
+    "data": "2025-06-10", 
+    "diagnostico": "Gripe", 
+    "receita": "Dipirona 500mg", 
+    "observacoes": "Repouso por 3 dias"
+}
+]

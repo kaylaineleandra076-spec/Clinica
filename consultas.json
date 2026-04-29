@@ -1,0 +1,9 @@
+[{
+"id": "001", 
+"paciente_id": "001", 
+"medico_id": "001", 
+"data": "2025-06-10", 
+"horario": "14:00", 
+"status": "Agendada"
+}
+]

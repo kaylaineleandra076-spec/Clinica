@@ -1,0 +1,9 @@
+[ 
+  { 
+    "id": "001", 
+    "nome": "Dr. Carlos", 
+    "crm": "12345-SP", 
+    "especialidade": "Clínico Geral", 
+    "ativo": true 
+  } 
+]
