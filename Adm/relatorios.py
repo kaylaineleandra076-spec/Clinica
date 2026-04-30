@@ -3,19 +3,28 @@ from pathlib import Path
 from banco import ler_json
 base = Path(__file__).parent
 
-def relatorio_consulta_por_periodo(inicio, fim):
+def relatorio_consulta_por_periodo(data_inicio, data_fim):
     consultas = ler_json("consultas.json")
-    medicos = ler_json("medicos.json")
-    pacientes = ler_json("pacientes.json")    
     relatorio = []
     for consulta in consultas:
-        data_consulta = consulta["data"]
-        if inicio <= data_consulta <= fim:
-            medico = next((m for m in medicos if m["id"] == consulta["medico_id"]), None)
-            paciente = next((p for p in pacientes if p["id"] == consulta["paciente_id"]), None)
-            relatorio.append({
-                "data": data_consulta,
-                "medico": medico["nome"] if medico else "Desconecido",
-                "paciente": paciente["nome"] if paciente else "Desconecido",
-                "descricao": consulta.get("descricao", "")
-            })
+        if data_inicio <= consulta["data"] <= data_fim:
+            relatorio.append(consulta)
+    return relatorio
+
+def relatorio_consultas_canceladas():
+    consultas = ler_json("consultas.json")
+    relatorio = []
+    for consulta in consultas:
+        if consulta["status"] == "cancelada":
+            relatorio.append(consulta)
+    return relatorio
+
+def relatorio_pacientes_cadastados():
+    pacientes = ler_json("pacientes.json")
+    for i, paciente in enumerate(pacientes):
+        print(f"Temos {i + 1} pacientes cadastrados.")
+
+def relatorio_medicos_ativos():
+    medicos = ler_json("medicos.json")
+    for i, medico in enumerate(medicos):
+        print(f"Temos {i + 1} médicos ativos.")
