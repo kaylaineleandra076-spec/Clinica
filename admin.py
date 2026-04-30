@@ -61,7 +61,7 @@ def editar_usuario():
     usuarios= ler_json('usuarios.json')
 
     if not usuarios:
-        print("Nenhum usuario ")
+        print("Nenhum usuario cadastrado ")
         return False
     
     for u in usuarios:
@@ -71,14 +71,28 @@ def editar_usuario():
         id_alvo= input("\n Digite o ID do usuário que deseja editar: ").strip()
 
         usuario_encontrado = None
-
         for usuario in usuarios: 
             if usuario['id'] == id_alvo:
-
                 usuario_encontrado = usuario
-
                 break
+
         if not usuario_encontrado:
             print("Usuario não encontrado!")
-            break
+            False
         
+        
+        print("\nDeixe em branco para mostrar o valor atual.")
+
+        
+
+def excluir_usuario():
+    print("=== EXCLUIR USUARIO === ")
+        
+    usuarios= ler_json('usuarios.json')
+
+    if not usuarios:
+        print("Nenhum usuário cadastrado!")
+        return False
+    
+    for u in usuarios:
+        sta

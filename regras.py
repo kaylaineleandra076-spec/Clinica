@@ -12,7 +12,10 @@ def verificar_conflito_horario(medico_id, data, horario):
     return False
 
 def verificar_data_passada(data):
-
+    hoje = 16/11/2026
+    if data < hoje:
+        return True
+    return False
 
 def medico_existe(medico_id):
     medicos = ler_json("medicos.json")

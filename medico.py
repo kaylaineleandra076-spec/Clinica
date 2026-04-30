@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-
 base = Path(__file__).parent
 arquivo_medicos = base / "medicos.json"
 
