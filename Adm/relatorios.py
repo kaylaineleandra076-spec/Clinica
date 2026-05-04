@@ -26,5 +26,50 @@ def relatorio_pacientes_cadastados():
 
 def relatorio_medicos_ativos():
     medicos = ler_json("medicos.json")
-    for i, medico in enumerate(medicos):
-        print(f"Temos {i + 1} médicos ativos.")
+    medicos_ativos = [m for m in medicos if m["ativo"]]
+    
+    print(f"Total de médicos ativos: {len(medicos_ativos)}")
+
+def relatorio_consultas_por_medico():
+    consultas = ler_json("consultas.json")
+    medicos = ler_json("medicos.json")
+    
+    relatorio = {}
+    for medico in medicos:
+        relatorio[medico["id"]] = {
+            "nome": medico["nome"],
+            "total_consultas": 0
+        }
+    
+    for consulta in consultas:
+        medico_id = consulta["medico_id"]
+        if medico_id in relatorio:
+            relatorio[medico_id]["total_consultas"] += 1
+    
+    return relatorio
+
+def relatorio_atendimentos_do_dia():
+    consultas = ler_json("consultas.json")
+    relatorio = []
+    for consulta in consultas:
+        if consulta["data"] == "2026-06-05":
+            relatorio.append(consulta)
+    return relatorio
+
+def relatorio_pacientes_mais_atendidos():
+    consultas = ler_json("consultas.json")
+    pacientes = ler_json("pacientes.json")
+    
+    relatorio = {}
+    for paciente in pacientes:
+        relatorio[paciente["id"]] = {
+            "nome": paciente["nome"],
+            "total_atendimentos": 0
+        }
+    
+    for consulta in consultas:
+        paciente_id = consulta["paciente_id"]
+        if paciente_id in relatorio:
+            relatorio[paciente_id]["total_atendimentos"] += 1
+    
+    return relatorio

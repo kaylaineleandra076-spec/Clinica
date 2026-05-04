@@ -11,7 +11,7 @@ def verificar_conflito_horario(medico_id, data, horario):
     return False
 
 def verificar_data_passada(data):
-    hoje = "05/06/2026"
+    hoje = "2026-06-05"
     if data < hoje:
         return True
     return False
