@@ -84,6 +84,7 @@ def editar_usuario():
         print("\nDeixe em branco para mostrar o valor atual.")
 
 def excluir_usuario():
+
     print("=== EXCLUIR USUARIO === ")
         
     usuarios= ler_json('usuarios.json')
@@ -108,6 +109,19 @@ def excluir_usuario():
     print("Usuário não encontrado!")
     return False
 
+def listar_usuarios():
+        print("=== LISTA DE USUÁRIOS ===")
+
+        usuarios= ler_json('usuarios.json')
+
+        if not usuarios:
+            print("Nenhum usuário cadastrado!")
+            return False
+        
+        for u in usuarios:
+            status= "Ativo" if u['ativo'] else "Inativo"
+            print(f"ID: {u['id']} | {u['nome']} | {u['login']} | {u['perfil']} | {status}")
+
 def resetar_usuarios():
     print("=== RESETEAR USUÁRIOS ===")
     confirmacao= input("Tem certeza que deseja resetar os usuários? Todos os dados serão perdidos! (s/n): ").strip().lower()
@@ -120,19 +134,6 @@ def resetar_usuarios():
         print("Operação cancelada.")
         return False
     
-def listar_usuarios():
-    print("=== LISTA DE USUÁRIOS ===")
-
-    usuarios= ler_json('usuarios.json')
-
-    if not usuarios:
-        print("Nenhum usuário cadastrado!")
-        return False
-    
-    for u in usuarios:
-        status= "Ativo" if u['ativo'] else "Inativo"
-        print(f"ID: {u['id']} | {u['nome']} | {u['login']} | {u['perfil']} | {status}")
-
 def cadastrar_medico():
     print("===CADASTRO MEDICO===")
     nome= input("Nome Completo:")
@@ -182,8 +183,8 @@ def editar_medico():
     with open("medicos.json", "w", encoding="utf-8") as f:
         json.dump(medicos, f, indent=4, ensure_ascii=False)
 
-
 def excluir_medico():
+
     print("===EXCLUIR MEDICO===")
 
     id = int(input("ID do Médico a Excluir:"))
@@ -200,3 +201,17 @@ def excluir_medico():
 
     with open("medicos.json", "w", encoding="utf-8") as f:
         json.dump(medicos, f, indent=4, ensure_ascii=False)
+
+def listar_medicos():
+    print("=== LISTA DE MÉDICOS ===")
+
+    with open("medicos.json", "r", encoding="utf-8") as f:
+        medicos = json.load(f)
+
+        if not medicos:
+            print("Nenhum médico cadastrado!")
+            return False
+        
+        for m in medicos:
+            print(f"ID: {m['id']} | {m['nome']} | CRM: {m['CRM']} | Especialidade: {m['especialidade']}")
+
