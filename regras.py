@@ -1,5 +1,4 @@
 import json
-from datetime import date
 from pathlib import Path
 from banco import ler_json
 base = Path(__file__).parent
@@ -12,7 +11,7 @@ def verificar_conflito_horario(medico_id, data, horario):
     return False
 
 def verificar_data_passada(data):
-    hoje = 16/11/2026
+    hoje = "2026-06-05"
     if data < hoje:
         return True
     return False
