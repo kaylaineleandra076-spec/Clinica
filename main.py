@@ -3,7 +3,7 @@ from admin import cadastrar_usuario, editar_usuario, excluir_usuario, resetar_us
 from recepcionista import cadastrar_paciente, editar_paciente
 from medico import ver_agenda_hoje, iniciar_atendimento
 
-def menu_administrador(usuario):
+def menu_administrador():
     print("=== MENU ADMINISTRADOR === ")
     print("1 - Cadastrar usuário")
     print("2 - Editar usuário")
@@ -44,7 +44,7 @@ def menu_administrador(usuario):
     else:
         print("Opção inválida. Tente novamente.")
 
-def menu_recepcionista(usuario):
+def menu_recepcionista():
     print("=== MENU RECEPCIONISTA ===")
     print("1 - Cadastrar paciente")
     print("2 - Editar paciente")
