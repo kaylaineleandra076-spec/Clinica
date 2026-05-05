@@ -215,3 +215,97 @@ def listar_medicos():
         for m in medicos:
             print(f"ID: {m['id']} | {m['nome']} | CRM: {m['CRM']} | Especialidade: {m['especialidade']}")
 
+def relatorio_consulta_por_periodo(data_inicial, data_final):
+    consultas = ler_json("consultas.json")
+    relatorio = []
+    for consulta in consultas:
+        if data_inicial <= consulta["data"] <= data_final:
+            relatorio.append(consulta)
+    return relatorio
+
+def relatorio_consultas_canceladas():
+    consultas = ler_json("consultas.json")
+    pacientes = ler_json("pacientes.json")
+    medicos = ler_json("medicos.json")
+
+    canceladas = [c for c in consultas if c["status"] == "cancelada"]
+
+    if not canceladas:
+        print("Nenhuma consulta cancelada anteriormente.") 
+        return
+    
+    print(f"\nTotal: {len(canceladas)} consultas canceladas.\n")
+    for consulta in canceladas:
+        paciente = next((p for p in pacientes if p["id"] == consulta["paciente_id"]), None)
+        medico = next((m for m in medicos if m["id"] == consulta["medico_id"]), None)
+
+        nome_paciente = paciente["nome"] if paciente else "Paciente Desconecido"
+        nome_medico = medico["nome"] if medico else "Médico Desconhecido"
+
+        print(f"Consulta ID: {consulta['id']}, Paciente: {nome_paciente}, Médico: {nome_medico}, Data: {consulta['data']}, Horário: {consulta['horario']}")
+
+def relatorio_pacientes_cadastrados():
+    print("=== PACIENTES CADASTRADOS ===")
+
+    pacientes = ler_json('pacientes.json')
+    print(f"Total de pacientes cadastrador: {len('pacientes.josn')}")
+
+def relatorio_medicos_ativos():
+    print("=== MÉDICOS ATIVOS ===")
+    medicos = ler_json('medicos.json')
+    ativos = [m for m in medicos if m.get('ativo', True)]
+    print(f"Total de médicos ativos: {len(ativos)}")
+
+def relatorio_consulta_por_medico(medico_id):
+    consultas = ler_json("consultas.json")
+    relatorio = []
+    for consulta in consultas:
+        if consulta["medico_id"] == medico_id:
+            relatorio.append(consulta)
+    return relatorio
+
+def relatorio_atendimento_do_dia():
+    print("=== ATENDIMENTOS DO DIA ===")
+
+    from datetime import date
+    hoje = str(date.today())
+
+    consultas = ler_json("consultas.json")
+    pacientes = ler_json("pacientes.json")
+    medicos = ler_json('medicos.json')
+
+    hoje_consultas = [c for c in consultas if consultas if c['datas'] == hoje]
+    
+    if not hoje_consultas:
+        print("Nenhuma consulta agendada para hoje.")
+        return
+    print(f"Total: {len(hoje_consultas)} consulta(s).")
+
+    for c in sorted(hoje_consultas, key= lambda x: x['horario']):
+        paciente = next((p for p in pacientes if p['id'] == c['pacientes_id']), None)
+        medico = next((m for m in medicos  if m['id'] == m['medico_id']), None)
+
+        print(f"{c['horario']} | {paciente['nome']} | Dr(a). {medico['nome']} | {c['status']}")
+
+def relatorio_pacientes_mais_atendidos():
+    print("=== PACIENTES MAIS ATENDIDOS ===")
+
+    consultas = ler_json("consultas.json")
+    pacientes = ler_json("pacientes.json")
+
+    finalizadas= [c for c in consultas if c['status'] == 'Finalizada']
+
+    if not finalizadas:
+        print("Nenhuma consulta finalizada.")
+        return
+    
+    contagem = {}
+
+    for c in finalizadas:
+        contagem[c['paciente_id']] = contagem.get(c['paciente_id'], 0) + 1
+
+        ranking= sorted(contagem.items(), key=lambda x: x[1], reverse=True)
+
+        for i, (pid, total) in enumerate(ranking, start=1):
+            paciente = next((p for p in pacientes if p['id'] == pid), None)
+            print(f"{i}. {paciente['nome']} | {total} atendimentos")
