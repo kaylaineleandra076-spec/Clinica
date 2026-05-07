@@ -37,10 +37,14 @@ while True:
         print("Acesso Liberado!")
         break
 
-def verificar_permissao(usuario_logado, perfil_necessario):
+def verificar_permissao():
+
     if usuario_logado is None:
+
         print("ERRO! nenhum usuario logado!")
+
         return False
+    
     if usuario_logado['perfil']== perfil_necessario:
         return True
     else:
@@ -83,3 +87,30 @@ while True:
     if usuario_logado:
        print("Acesso Liberado!")
        break
+
+def gerar_relatorios():
+    print("=== RELATÓRIOS ===")
+    print("1 - Histórico do paciente")
+    print("2 - Agenda do dia")
+    print("3 - Consultas por data")
+    print("4 - Cancelamentos")
+    print("0 - Voltar")
+
+    op = input("\nEscolha uma opção: ").strip()
+
+    if op == '1':
+        from RelatRecepcionista import historico_paciente
+        historico_paciente()
+    elif op == '2':
+        from RelatRecepcionista import relatorio_agenda_dia
+        relatorio_agenda_dia()
+    elif op == '3':
+        from RelatRecepcionista import relatorio_consulta_data
+        relatorio_consulta_data()
+    elif op == '4':
+        from RelatRecepcionista import relatorio_cancelamento
+        relatorio_cancelamento()
+    elif op == '0':
+        return
+    else:
+        print("Opção inválida. Tente novamente.")

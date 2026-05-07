@@ -79,7 +79,6 @@ def listar_pacientes():
         print(f"CPF: {paciente['CPF']}")
         print("==========================")
 
-
 #Gestao de consultas:
 
 def gerar_id(lista):
@@ -130,4 +129,47 @@ def marcar_consulta():
     consultas.append(consulta)
     salvar_json('consultas.json', consultas)
     print("Consulta marcada com sucesso!")
+
+def reagendar_consulta():
+    consultas = ler_json('consultas.json')
+
+    if not consultas:
+        print("Nenhuma consulta encontrada!")
+        return
+    
+    print("=== Reagendar Consulta ===")
+    id_consulta = int(input("Digite o ID da consulta que deseja reagendar: "))
+    consulta = next((c for c in consultas if c['id'] == id_consulta), None)
+
+    if not consulta:
+        print("Consulta não econtrada!")
+        return
+    
+    nova_data = input("Digite a nova data da consulta (DD/MM/AAAA): ")
+    nova_hora = input("Digite a nova hora da consulta (HH:MM): ")
+    consulta['data']= nova_data
+    consulta['hora']= nova_hora
+    salvar_json('consultas.json', consultas)
+
+    print("Consulta reagendada com sucesso!")
+
+def cancelar_consulta():
+    consultas = ler_json('consultas.json')
+
+    if not consultas:
+        print("Nenhuma consulta encontrada!")
+        return
+    
+    print("=== Cancelar Consulta ===")
+    id_consulta = int(input("Digite o ID da consulta que deseja cancelar: "))
+    consulta = next((c for c in consultas if c['id'] == id_consulta), None)
+
+    if not consulta:
+        print("Consulta não econtrada!")
+        return
+    
+    consulta['status']= "Cancelada"
+    salvar_json('consultas.json', consultas)
+
+    print("Consulta cancelada com sucesso!")
 

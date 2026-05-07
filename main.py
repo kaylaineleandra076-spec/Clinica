@@ -1,5 +1,5 @@
-from auth import fazer_login, verificar_permissao, encerrar_sessao, resetar_senha, login
-from admin import cadastrar_usuario, editar_usuario, excluir_usuario, resetar_usuarios, listar_usuarios
+from auth import fazer_login, encerrar_sessao, gerar_relatorios, verificar_permissao
+from admin import cadastrar_medico, cadastrar_usuario, editar_medico, editar_usuario, excluir_medico, excluir_usuario, listar_medicos, resetar_usuarios, listar_usuarios
 from recepcionista import cadastrar_paciente , editar_paciente, listar_pacientes , encerrar_sessao
 from medico import ver_agenda_hoje, iniciar_atendimento
 
