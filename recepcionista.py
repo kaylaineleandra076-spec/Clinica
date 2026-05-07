@@ -233,4 +233,4 @@ def consultas_do_dia():
         paciente= next((m for m in pacientes if m['id'] == c['medico_id']), None)
         print(f"{c['horario']} | {paciente['nome']} | Dr(a). {medico['nome']} | {c['status']}")
         #continuar
-        
+        #tentar
