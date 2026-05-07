@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 base = Path(__file__).parent
 from banco import ler_json , salvar_json
+from datetime import date
+
+def painel_recepcionista(usuario):
+    hoje = str(date.today())
 
 def cadastrar_paciente():
     pacientes= ler_json('pacientes.json')
@@ -173,3 +177,60 @@ def cancelar_consulta():
 
     print("Consulta cancelada com sucesso!")
 
+def confirmar_presença():
+
+    paciente = ler_json('pacientes.json')
+
+    if not paciente:
+        print("Nenhum paciente encontrado.")
+        return
+
+    print("=== CONFIRMAR PRESENÇA ===")
+
+    consultas = ler_json('consultas.json')
+    pacientes = ler_json('pacientes.json')
+    medico = ler_json('medico.json')
+    hoje = str (date.today())
+
+    consultas_hoje= [ c for c in consultas if c['data'] == hoje and c ['status']]
+
+    if not consultas_do_dia:
+        print("Nenhuma consulta encontrada para hoje")
+        return
+    
+    for c in consultas_do_dia:
+        pacientes = next((p for p in pacientes if p['id'] == c['paciente_id']), None)
+        print(f"ID: {c['id']} | {pacientes['nome']} | {c['horario']}")
+
+
+        consultas_id= input("\n ID da consulta: ")
+        consultas= next((c for c in consultas_do_dia if c['id'] == consultas_id), None)
+
+        if not consultas:
+            print("Consulta não encontrada.")
+            return False
+        consultas['status']= 'Confirmada'
+        salvar_json('consultas.json', consultas_do_dia)
+        print("Presença confirmada com sucesso!")
+        return True
+    
+def consultas_do_dia():
+    print("=== CONSULTAS DO DIA ===")
+
+    consultas = ler_json('consultas.json')
+    pacientes = ler_json('pacientes.json')
+    medico = ler_json('medico.json')
+    hoje = str(date.today())
+
+    consulta_hoje= [c for c in consultas if c['data'] == hoje]
+
+    if not consulta_hoje:
+        print("Nenhuma consulta para hoje")
+        return
+    
+    for c in sorted(consulta_hoje, key=lambda x: x['horario']):
+        paciente= next((p for p in pacientes if p['id'] == c['paciente_id']), None)
+        paciente= next((m for m in pacientes if m['id'] == c['medico_id']), None)
+        print(f"{c['horario']} | {paciente['nome']} | Dr(a). {medico['nome']} | {c['status']}")
+        #continuar
+        

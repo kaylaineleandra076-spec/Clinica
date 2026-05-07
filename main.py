@@ -1,6 +1,6 @@
 from auth import fazer_login, encerrar_sessao, gerar_relatorios, verificar_permissao
 from admin import cadastrar_medico, cadastrar_usuario, editar_medico, editar_usuario, excluir_medico, excluir_usuario, listar_medicos, resetar_usuarios, listar_usuarios
-from recepcionista import cadastrar_paciente , editar_paciente, listar_pacientes , encerrar_sessao
+from recepcionista import buscar_paciente, cadastrar_paciente, cancelar_consulta, confirmar_presença, consultas_do_dia , editar_paciente, listar_pacientes , encerrar_sessao, marcar_consulta, reagendar_consulta
 from medico import ver_agenda_hoje, iniciar_atendimento
 
 def menu_administrador():
@@ -47,8 +47,15 @@ def menu_administrador():
 def menu_recepcionista():
     print("=== MENU RECEPCIONISTA ===")
     print("1 - Cadastrar paciente")
-    print("2 - Editar paciente")
-    print("3 - Listar pacientes")
+    print("2 - Editar Paciente")
+    print("3 - Buscar Pacientes")
+    print("4 - Listar Pacientes")
+    print("5 - Marcar Consulta")
+    print("6 - Reagendar Consulta")
+    print("7 - Cancelar Consulta")
+    print("8 - Confirmar presença")
+    print("9 - Consultas do dia")
+    print("10 - Relatorio")
     print("0 - Sair")
 
     op= input("\nEscolha uma opção").strip()
@@ -58,11 +65,26 @@ def menu_recepcionista():
     elif op == '2':
         editar_paciente()
     elif op == '3':
+        buscar_paciente()
+    elif op == '4':
         listar_pacientes()
+    elif op == '5':
+        marcar_consulta()
+    elif op == '6':
+        reagendar_consulta()
+    elif op == '7':
+        cancelar_consulta()
+    elif op == '8':
+        confirmar_presença()
+    elif op == '9':
+        consultas_do_dia()
+    elif op == '10':
+        menu_relatorio_recepcionista(usuario) # pyright: ignore[reportUndefinedVariable]
     elif op == '0':
         encerrar_sessao()
+        exit()
     else:
-        print("Opção inválida. Tente novamente.")
+        print("Opção inválida")
 
 def menu_medico(usuario):
     print("=== MENU MÉDICO ===")
@@ -77,7 +99,7 @@ def menu_medico(usuario):
     elif op == '2':
         iniciar_atendimento(usuario)
     elif op == '0':
-        encerrar_sessao()
+        encerrar_sessao(usuario)
     else:
         print("Opção inválida. Tente novamente.")
 
