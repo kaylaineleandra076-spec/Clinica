@@ -136,23 +136,11 @@ def resetar_usuarios():
 
 # MÉDICOS   
 
-def carregar_medicos():
-    if not arquivo_medicos.exists():
-        return []
-
-    with open(arquivo_medicos, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def salvar_medicos(medicos):
-    with open(arquivo_medicos, "w", encoding="utf-8") as f:
-        json.dump(medicos, f, indent=4, ensure_ascii=False)
-
 
 def cadastrar_medico():
     print("=== CADASTRO MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
 
     nome = input("Nome Completo: ")
     crm = input("CRM: ")
@@ -169,16 +157,15 @@ def cadastrar_medico():
     }
 
     medicos.append(novo_medico)
-
-    salvar_medicos(medicos)
+    salvar_json('medicos.json', medicos)
 
     print("Médico cadastrado com sucesso!")
-
 
 def listar_medicos():
     print("=== LISTA DE MÉDICOS ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+   
 
     if not medicos:
         print("Nenhum médico cadastrado.")
@@ -195,11 +182,11 @@ def listar_medicos():
             f'Status: {status}'
         )
 
-
 def editar_medico():
     print("=== EDITAR MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+    
 
     listar_medicos()
 
@@ -240,11 +227,11 @@ def editar_medico():
 
     print("Médico atualizado com sucesso!")
 
-
 def excluir_medico():
     print("=== EXCLUIR MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+    
 
     try:
         id_medico = int(input("ID do Médico a Excluir: "))
