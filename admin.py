@@ -168,6 +168,7 @@ def cadastrar_medico():
         "ativo": True
     }
 
+
     medicos.append(novo_medico)
 
     salvar_medicos(medicos)
