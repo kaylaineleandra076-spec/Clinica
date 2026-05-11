@@ -19,9 +19,9 @@ def fazer_login():
     usuarios = ler_json('usuario.json')
 
     for usuario in usuarios:
-        if usuario['login'] == login and usuario['senha'] == senha:
-            if usuario['ativo']:
-                print(f'\nBem vindo(a), {usuario['nome']}! Perfil:{usuario['perfil']}.')
+        if usuario.get('login') == login and usuario.get('senha') == senha:
+            if usuario.get('ativo', True):
+                print(f"\nBem vindo(a), {usuario['nome']}! Perfil: {usuario['perfil']}.")
                 return usuario
             else:
                 print("Usuario inativo! Contate o administrador!")
@@ -30,14 +30,9 @@ def fazer_login():
     print("Login ou Senha incorreto!")
     return None
 
-while True:
-    usuario_logado= fazer_login()
+# NOTE: não executar loop de login no import — `main.py` gerencia o fluxo de execução
 
-    if usuario_logado:
-        print("Acesso Liberado!")
-        break
-
-def verificar_permissao():
+def verificar_permissao(usuario_logado, perfil_necessario):
 
     if usuario_logado is None:
 
@@ -53,40 +48,31 @@ def verificar_permissao():
     
 
 def resetar_senha(login):
-    usuarios= ler_json['usuarios.json']
-
+    usuarios = ler_json('usuarios.json')
     for usuario in usuarios:
-        
-        if usuario['login'] == login:
-            nova_senha= input("Digite uma nova senha: ")
-            confirmacao= input("Confirme a nova senha: ")
-
+        if usuario.get('login') == login:
+            nova_senha = input("Digite uma nova senha: ")
+            confirmacao = input("Confirme a nova senha: ")
             if nova_senha != confirmacao:
                 print("As senhas não coincidem. Tente novamente.")
                 return False
-            
-            usuario['senha']== nova_senha
+            usuario['senha'] = nova_senha
             salvar_json('usuarios.json', usuarios)
             print(f"Senha do usuário '{usuario['nome']}' redefinida com sucesso!")
             return True
-    
     print(f"Usuario com o login '{login}' não encontrado.")
     return False
 
 
-def encerrar_sessao():
-    global usuario_logado
-    nome= usuario_logado['nome']
-    usuario_logado= None
-    print(f"\n Até logo, {nome}! Sessão encerrada.")
+def encerrar_sessao(usuario=None):
+    if usuario and isinstance(usuario, dict):
+        nome = usuario.get('nome')
+        print(f"\nAté logo, {nome}! Sessão encerrada.")
+    else:
+        print("\nSessão encerrada.")
 
 
-while True:
-    usuario_logado= fazer_login()
-
-    if usuario_logado:
-       print("Acesso Liberado!")
-       break
+# NOTE: não executar loop de login no import — `main.py` gerencia o fluxo de execução
 
 def gerar_relatorios():
     print("=== RELATÓRIOS ===")

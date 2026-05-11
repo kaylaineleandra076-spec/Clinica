@@ -1,7 +1,7 @@
 from auth import fazer_login, encerrar_sessao, gerar_relatorios, verificar_permissao
-from admin import cadastrar_medico, cadastrar_usuario, editar_medico, editar_usuario, excluir_medico, excluir_usuario, listar_medicos, resetar_usuarios, listar_usuarios
-from recepcionista import buscar_paciente, cadastrar_paciente, cancelar_consulta, confirmar_presença, consultas_do_dia , editar_paciente, listar_pacientes , encerrar_sessao, marcar_consulta, reagendar_consulta
-from medico import ver_agenda_hoje, iniciar_atendimento
+import admin
+import recepcionista
+import medico
 
 def menu_administrador():
     print("=== MENU ADMINISTRADOR === ")
@@ -20,31 +20,29 @@ def menu_administrador():
     op= input("\nEscolha uma opção").strip()
 
     if op == '1':
-        cadastrar_usuario()
+        admin.cadastrar_usuario()
     elif op == '2':
-        editar_usuario()
+        admin.editar_usuario()
     elif op == '3':
-        excluir_usuario()
+        admin.excluir_usuario()
     elif op == '4':
-        resetar_usuarios()
+        admin.resetar_usuarios()
     elif op == '5':
-        listar_usuarios()
+        admin.listar_usuarios()
     elif op == '6':
-        cadastrar_medico()
+        admin.cadastrar_medico()
     elif op == '7':
-        editar_medico()
+        admin.editar_medico()
     elif op == '8':
-        excluir_medico()
+        admin.excluir_medico()
     elif op == '9':
-        listar_medicos()
+        admin.listar_medicos()
     elif op == '10':
         gerar_relatorios()
     elif op == '0':
         encerrar_sessao()
-    else:
-        print("Opção inválida. Tente novamente.")
 
-def menu_recepcionista():
+def menu_recepcionista(usuario):
     print("=== MENU RECEPCIONISTA ===")
     print("1 - Cadastrar paciente")
     print("2 - Editar Paciente")
@@ -58,33 +56,8 @@ def menu_recepcionista():
     print("10 - Relatorio")
     print("0 - Sair")
 
-    op= input("\nEscolha uma opção").strip()
-
-    if op == '1':
-        cadastrar_paciente()
-    elif op == '2':
-        editar_paciente()
-    elif op == '3':
-        buscar_paciente()
-    elif op == '4':
-        listar_pacientes()
-    elif op == '5':
-        marcar_consulta()
-    elif op == '6':
-        reagendar_consulta()
-    elif op == '7':
-        cancelar_consulta()
-    elif op == '8':
-        confirmar_presença()
-    elif op == '9':
-        consultas_do_dia()
-    elif op == '10':
-        menu_relatorio_recepcionista(usuario) # pyright: ignore[reportUndefinedVariable]
-    elif op == '0':
-        encerrar_sessao()
-        exit()
-    else:
-        print("Opção inválida")
+    # delega todo o menu interativo ao painel dentro do módulo recepcionista
+    recepcionista.painel_recepcionista(usuario)
 
 def menu_medico(usuario):
     print("=== MENU MÉDICO ===")
@@ -95,30 +68,38 @@ def menu_medico(usuario):
     op= input("\nEscolha uma opção").strip()
 
     if op == '1':
-        ver_agenda_hoje(usuario)
+        medico.ver_agenda_hoje(usuario)
     elif op == '2':
-        iniciar_atendimento(usuario)
+        medico.iniciar_atendimento(usuario)
     elif op == '0':
-        encerrar_sessao(usuario)
+        encerrar_sessao()
     else:
         print("Opção inválida. Tente novamente.")
+
 
 def main():
     while True:
         usuario_logado = fazer_login()
+        if not usuario_logado:
+            tentar = input('\nDeseja tentar login novamente? (s/n): ').strip().lower()
+            if tentar != 's':
+                print('Saindo.')
+                return
+            continue
 
-        if usuario_logado:
-            print("Acesso Liberado!")
-            break
+        print('Acesso Liberado!')
 
-    while True:
-        if usuario_logado['perfil'] == 'administrador':
-            menu_administrador(usuario_logado)
-        elif usuario_logado['perfil'] == 'recepcionista':
+        perfil = usuario_logado.get('perfil')
+        if perfil == 'administrador':
+            menu_administrador()
+        elif perfil == 'recepcionista':
             menu_recepcionista(usuario_logado)
-        elif usuario_logado['perfil'] == 'medico':
+        elif perfil == 'medico':
             menu_medico(usuario_logado)
         else:
-            print("Perfil desconhecido. Encerrando sessão.")
+            print('Perfil desconhecido. Encerrando sessão.')
             encerrar_sessao()
-            break
+
+
+if __name__ == '__main__':
+    main(fazer_login)
