@@ -5,7 +5,65 @@ from banco import ler_json , salvar_json
 from datetime import date
 
 def painel_recepcionista(usuario):
-    hoje = str(date.today())
+    from RelatRecepcionista import (
+        historico_paciente,
+        relatorio_agenda_dia,
+        relatorio_consulta_data,
+        relatorio_cancelamento,
+        pacientes_atendidos_hoje,
+    )
+
+    while True:
+        print('\n=== PAINEL RECEPCIONISTA ===')
+        print('1 - Cadastrar paciente')
+        print('2 - Editar paciente')
+        print('3 - Buscar paciente')
+        print('4 - Listar pacientes')
+        print('5 - Marcar consulta')
+        print('6 - Reagendar consulta')
+        print('7 - Cancelar consulta')
+        print('8 - Confirmar presença')
+        print('9 - Consultas do dia')
+        print('10 - Histórico do paciente')
+        print('11 - Relatório: agenda do dia')
+        print('12 - Relatório: consultas por data')
+        print('13 - Relatório: cancelamentos')
+        print('14 - Pacientes atendidos hoje')
+        print('0 - Sair')
+
+        opc = input('Escolha uma opção: ')
+        if opc == '1':
+            cadastrar_paciente()
+        elif opc == '2':
+            editar_paciente()
+        elif opc == '3':
+            buscar_paciente()
+        elif opc == '4':
+            listar_pacientes()
+        elif opc == '5':
+            marcar_consulta()
+        elif opc == '6':
+            reagendar_consulta()
+        elif opc == '7':
+            cancelar_consulta()
+        elif opc == '8':
+            confirmar_presença()
+        elif opc == '9':
+            consultas_do_dia()
+        elif opc == '10':
+            historico_paciente()
+        elif opc == '11':
+            relatorio_agenda_dia()
+        elif opc == '12':
+            relatorio_consulta_data()
+        elif opc == '13':
+            relatorio_cancelamento()
+        elif opc == '14':
+            pacientes_atendidos_hoje()
+        elif opc == '0':
+            break
+        else:
+            print('Opção inválida.')
 
 def cadastrar_paciente():
     pacientes= ler_json('pacientes.json')
@@ -23,7 +81,7 @@ def cadastrar_paciente():
         "CPF": CPF
     }
 
-    paciente.append(paciente)
+    pacientes.append(paciente)
     salvar_json('pacientes.json', pacientes)
     print("Paciente cadastrado com sucesso!")
 
@@ -119,15 +177,16 @@ def marcar_consulta():
     if not medico:
         print("Médico não encontrado!")
         return
-    data = input("Digite a data da consulta (DD/MM/AAAA): ")
-    hora = input("Digite a hora da consulta (HH:MM): ")
+    # usar formato ISO para data (AAAA-MM-DD) para compatibilidade com relatórios
+    data = input("Digite a data da consulta (AAAA-MM-DD): ")
+    horario = input("Digite a hora da consulta (HH:MM): ")
 
     consulta = {
         "id": gerar_id(consultas),
-        "id_paciente": paciente['id'],
-        "id_medico": medico['id'],
+        "paciente_id": paciente['id'],
+        "medico_id": medico['id'],
         "data": data,
-        "hora": hora,
+        "horario": horario,
         "status": "Agendada"
     }
     consultas.append(consulta)
@@ -149,10 +208,10 @@ def reagendar_consulta():
         print("Consulta não econtrada!")
         return
     
-    nova_data = input("Digite a nova data da consulta (DD/MM/AAAA): ")
+    nova_data = input("Digite a nova data da consulta (AAAA-MM-DD): ")
     nova_hora = input("Digite a nova hora da consulta (HH:MM): ")
-    consulta['data']= nova_data
-    consulta['hora']= nova_hora
+    consulta['data'] = nova_data
+    consulta['horario'] = nova_hora
     salvar_json('consultas.json', consultas)
 
     print("Consulta reagendada com sucesso!")
@@ -178,59 +237,49 @@ def cancelar_consulta():
     print("Consulta cancelada com sucesso!")
 
 def confirmar_presença():
-
-    paciente = ler_json('pacientes.json')
-
-    if not paciente:
-        print("Nenhum paciente encontrado.")
-        return
-
-    print("=== CONFIRMAR PRESENÇA ===")
-
     consultas = ler_json('consultas.json')
     pacientes = ler_json('pacientes.json')
-    medico = ler_json('medico.json')
-    hoje = str (date.today())
+    hoje = str(date.today())
 
-    consultas_hoje= [ c for c in consultas if c['data'] == hoje and c ['status']]
+    consultas_hoje = [c for c in consultas if c.get('data') == hoje and c.get('status') == 'Agendada']
 
-    if not consultas_do_dia:
+    if not consultas_hoje:
         print("Nenhuma consulta encontrada para hoje")
         return
-    
-    for c in consultas_do_dia:
-        pacientes = next((p for p in pacientes if p['id'] == c['paciente_id']), None)
-        print(f"ID: {c['id']} | {pacientes['nome']} | {c['horario']}")
 
+    for c in consultas_hoje:
+        p = next((p for p in pacientes if p.get('id') == c.get('paciente_id')), None)
+        nome_p = p.get('nome') if p else 'Paciente Desconhecido'
+        print(f"ID: {c['id']} | {nome_p} | {c.get('horario')}")
 
-        consultas_id= input("\n ID da consulta: ")
-        consultas= next((c for c in consultas_do_dia if c['id'] == consultas_id), None)
-
-        if not consultas:
-            print("Consulta não encontrada.")
-            return False
-        consultas['status']= 'Confirmada'
-        salvar_json('consultas.json', consultas_do_dia)
-        print("Presença confirmada com sucesso!")
-        return True
+    consulta_id = input("\nID da consulta para confirmar: ").strip()
+    consulta_sel = next((c for c in consultas_hoje if str(c.get('id')) == consulta_id), None)
+    if not consulta_sel:
+        print("Consulta não encontrada.")
+        return False
+    consulta_sel['status'] = 'Confirmada'
+    salvar_json('consultas.json', consultas)
+    print("Presença confirmada com sucesso!")
+    return True
     
 def consultas_do_dia():
     print("=== CONSULTAS DO DIA ===")
 
     consultas = ler_json('consultas.json')
     pacientes = ler_json('pacientes.json')
-    medico = ler_json('medico.json')
+    medicos = ler_json('medicos.json')
     hoje = str(date.today())
 
-    consulta_hoje= [c for c in consultas if c['data'] == hoje]
+    consulta_hoje = [c for c in consultas if c.get('data') == hoje]
 
     if not consulta_hoje:
         print("Nenhuma consulta para hoje")
         return
     
-    for c in sorted(consulta_hoje, key=lambda x: x['horario']):
-        paciente= next((p for p in pacientes if p['id'] == c['paciente_id']), None)
-        paciente= next((m for m in pacientes if m['id'] == c['medico_id']), None)
-        print(f"{c['horario']} | {paciente['nome']} | Dr(a). {medico['nome']} | {c['status']}")
-        #continuar
-        #tentar
+    for c in sorted(consulta_hoje, key=lambda x: x.get('horario', '')):
+
+        paciente = next((p for p in pacientes if p.get('id') == c.get('paciente_id')), None)
+        medico = next((m for m in medicos if m.get('id') == c.get('medico_id')), None)
+        nome_p = paciente.get('nome') if paciente else 'Paciente Desconhecido'
+        nome_m = medico.get('nome') if medico else 'Médico Desconhecido'
+        print(f"{c.get('horario')} | {nome_p} | Dr(a). {nome_m} | {c.get('status')}")

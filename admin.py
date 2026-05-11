@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-from medico import salvar_medicos
 base = Path(__file__).parent
-from banco import ler_json,gerar_id,salvar_json
+from banco import ler_json, gerar_id, salvar_json
 
 def cadastrar_usuario():
 
@@ -12,7 +11,7 @@ def cadastrar_usuario():
     nome= input("Nome Completo: ")
     login= input("login: ")
 
-    usuarios = ler_json('usuariod.json')
+    usuarios = ler_json('usuarios.json')
 
     for usuario in usuarios:
         if usuario['login']== login:
@@ -225,7 +224,7 @@ def editar_medico():
     elif ativo == "n":
         medico["ativo"] = False
 
-    salvar_medicos(medicos)
+    salvar_json('medicos.json', medicos)
 
     print("Médico atualizado com sucesso!")
 
@@ -253,13 +252,9 @@ def excluir_medico():
     ).lower()
 
     if confirmar == "s":
-
         medicos.remove(medico)
-
-        salvar_medicos(medicos)
-
+        salvar_json('medicos.json', medicos)
         print("Médico excluído com sucesso!")
-
     else:
         print("Exclusão cancelada.")
 
