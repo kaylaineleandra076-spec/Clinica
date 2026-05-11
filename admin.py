@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+
+from medico import salvar_medicos
 base = Path(__file__).parent
 from banco import ler_json,gerar_id,salvar_json
 
@@ -136,23 +138,11 @@ def resetar_usuarios():
 
 # MÉDICOS   
 
-def carregar_medicos():
-    if not arquivo_medicos.exists():
-        return []
-
-    with open(arquivo_medicos, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def salvar_medicos(medicos):
-    with open(arquivo_medicos, "w", encoding="utf-8") as f:
-        json.dump(medicos, f, indent=4, ensure_ascii=False)
-
 
 def cadastrar_medico():
     print("=== CADASTRO MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
 
     nome = input("Nome Completo: ")
     crm = input("CRM: ")
@@ -168,18 +158,16 @@ def cadastrar_medico():
         "ativo": True
     }
 
-
     medicos.append(novo_medico)
-
-    salvar_medicos(medicos)
+    salvar_json('medicos.json', medicos)
 
     print("Médico cadastrado com sucesso!")
-
 
 def listar_medicos():
     print("=== LISTA DE MÉDICOS ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+   
 
     if not medicos:
         print("Nenhum médico cadastrado.")
@@ -196,11 +184,11 @@ def listar_medicos():
             f'Status: {status}'
         )
 
-
 def editar_medico():
     print("=== EDITAR MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+    
 
     listar_medicos()
 
@@ -241,11 +229,12 @@ def editar_medico():
 
     print("Médico atualizado com sucesso!")
 
-
 def excluir_medico():
+
     print("=== EXCLUIR MÉDICO ===")
 
-    medicos = carregar_medicos()
+    medicos = ler_json('medicos.json')
+    
 
     try:
         id_medico = int(input("ID do Médico a Excluir: "))
@@ -264,6 +253,7 @@ def excluir_medico():
     ).lower()
 
     if confirmar == "s":
+
         medicos.remove(medico)
 
         salvar_medicos(medicos)
@@ -307,7 +297,9 @@ def relatorio_pacientes_cadastrados():
     print("=== PACIENTES CADASTRADOS ===")
 
     pacientes = ler_json('pacientes.json')
+    print(f"Total de pacientes cadastrados: {len(pacientes)}")
     print(f"Total de pacientes cadastrador: {len('pacientes.josn')}")
+
 
 def relatorio_medicos_ativos():
     print("=== MÉDICOS ATIVOS ===")
