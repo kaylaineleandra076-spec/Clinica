@@ -30,8 +30,6 @@ def fazer_login():
     print("Login ou Senha incorreto!")
     return None
 
-# NOTE: não executar loop de login no import — `main.py` gerencia o fluxo de execução
-
 def verificar_permissao(usuario_logado, perfil_necessario):
 
     if usuario_logado is None:
@@ -70,9 +68,6 @@ def encerrar_sessao(usuario=None):
         print(f"\nAté logo, {nome}! Sessão encerrada.")
     else:
         print("\nSessão encerrada.")
-
-
-# NOTE: não executar loop de login no import — `main.py` gerencia o fluxo de execução
 
 def gerar_relatorios():
     print("=== RELATÓRIOS ===")
