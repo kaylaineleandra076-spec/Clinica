@@ -6,8 +6,14 @@ from datetime import date
 import regras
 #Agendas medico
 
+def painel_medico(usuario):
+    print("=== PAINEL MÉDICO ===")
+    print(f"Bem-vindo, Dr(a). {usuario['nome']}!")
+    print("======================")
+    print(f"Minhas Consultas:")
+
 def ver_agenda_hoje(usuario=None):
-    print("===AGENDA DO DIA===")
+    print("=== AGENDA DO DIA ===")
     hoje = str(date.today())
     consultas = ler_json("consultas.json")
     medico_id = None

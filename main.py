@@ -56,7 +56,6 @@ def menu_recepcionista(usuario):
     print("10 - Relatorio")
     print("0 - Sair")
 
-    # delega todo o menu interativo ao painel dentro do módulo recepcionista
     recepcionista.painel_recepcionista(usuario)
 
 def menu_medico(usuario):
@@ -78,14 +77,13 @@ def menu_medico(usuario):
 
 
 def main():
-    while True:
+        
         usuario_logado = fazer_login()
         if not usuario_logado:
             tentar = input('\nDeseja tentar login novamente? (s/n): ').strip().lower()
             if tentar != 's':
                 print('Saindo.')
                 return
-            continue
 
         print('Acesso Liberado!')
 
@@ -99,7 +97,3 @@ def main():
         else:
             print('Perfil desconhecido. Encerrando sessão.')
             encerrar_sessao()
-
-
-if __name__ == '__main__':
-    main(fazer_login)
