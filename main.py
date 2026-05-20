@@ -26,7 +26,7 @@ def menu_administrador():
     elif op == '3':
         admin.excluir_usuario()
     elif op == '4':
-        admin.resetar_usuarios()
+        admin.resetar_senha_usuarios()
     elif op == '5':
         admin.listar_usuarios()
     elif op == '6':
@@ -38,42 +38,99 @@ def menu_administrador():
     elif op == '9':
         admin.listar_medicos()
     elif op == '10':
-        gerar_relatorios()
+        admin.menu_relatorios()
     elif op == '0':
         encerrar_sessao()
-
-def menu_recepcionista(usuario):
-    print("=== MENU RECEPCIONISTA ===")
-    print("1 - Cadastrar paciente")
-    print("2 - Editar Paciente")
-    print("3 - Buscar Pacientes")
-    print("4 - Listar Pacientes")
-    print("5 - Marcar Consulta")
-    print("6 - Reagendar Consulta")
-    print("7 - Cancelar Consulta")
-    print("8 - Confirmar presença")
-    print("9 - Consultas do dia")
-    print("10 - Relatorio")
-    print("0 - Sair")
-
-    recepcionista.painel_recepcionista(usuario)
-
-def menu_medico(usuario):
-    print("=== MENU MÉDICO ===")
-    print("1 - Ver agenda de hoje")
-    print("2 - Iniciar atendimento")
-    print("0 - Sair")
-
-    op= input("\nEscolha uma opção").strip()
-
-    if op == '1':
-        medico.ver_agenda_hoje(usuario)
-    elif op == '2':
-        medico.iniciar_atendimento(usuario)
-    elif op == '0':
-        encerrar_sessao()
+        exit()
     else:
         print("Opção inválida. Tente novamente.")
+
+def menu_recepcionista(usuario):
+    while True:
+        print("=== MENU RECEPCIONISTA ===")
+        print("1 - Cadastrar paciente")
+        print("2 - Editar Paciente")
+        print("3 - Buscar Pacientes")
+        print("4 - Listar Pacientes")
+        print("5 - Marcar Consulta")
+        print("6 - Reagendar Consulta")
+        print("7 - Cancelar Consulta")
+        print("8 - Confirmar presença")
+        print("9 - Consultas do dia")
+        print("10 - Relatorio")
+        print("0 - Sair")
+
+        op = input("\nEscolha uma opção").strip()
+
+        if op == '1':
+            recepcionista.cadastrar_paciente()
+        elif op == '2':
+            recepcionista.editar_paciente()
+        elif op== '3':
+            recepcionista.buscar_paciente()
+        elif op == '4':
+            recepcionista.listar_pacientes()
+        elif op == '5':
+            recepcionista.marcar_consulta()
+        elif op == '6':
+            recepcionista.reagendar_consulta()
+        elif op == '7':
+            recepcionista.cancelar_consulta()
+        elif op == '8':
+            recepcionista.confirmar_presença()
+        elif op == '9':
+            recepcionista.listar_consultas_do_dia()
+        elif op == '10':
+            recepcionista.menu_relatorios()
+        elif op == '0':
+            encerrar_sessao()
+            exit()
+        else:
+            print("Opção inválida. Tente novamente.")
+            break
+
+
+
+
+    # recepcionista.painel_recepcionista(usuario)
+
+def menu_medico(usuario):
+    while True:
+        print("=== MENU MÉDICO ===")
+        print("1 - Ver agenda de hoje")
+        print("2 - Ver agenda futura")
+        print("3 - Iniciar atendimento")
+        print("4 - Finalizar atendimento")
+        print("5 - Registrar prontuário")
+        print("6 - Ver prontuário do paciente")
+        print("7 - Historico do paciente")
+        print("8 - Relatórios")
+        print("0 - Sair")
+
+        op= input("\nEscolha uma opção").strip()
+
+        if op == '1':
+            medico.ver_agenda_hoje(usuario['id'])
+        elif op == '2':
+            medico.ver_agenda_futura(usuario['id'])
+        elif op == '3':
+            medico.iniciar_atendimento(usuario['id'])
+        elif op == '4':
+            medico.finalizar_atendimento(usuario['id'])
+        elif op == '5':
+            medico.registrar_prontuario(usuario['id'])
+        elif op == '6':
+            medico.ver_prontuario_paciente(usuario['id'])
+        elif op == '7':
+            medico.buscar_historico_paciente(usuario['id'])
+        elif op == '8':
+            medico.menu_relatorios(usuario['id'])
+        elif op == '0':
+            encerrar_sessao()
+            exit()
+        else:
+            print("Opção inválida. Tente novamente.")
+            break
 
 
 def main():
@@ -97,3 +154,6 @@ def main():
         else:
             print('Perfil desconhecido. Encerrando sessão.')
             encerrar_sessao()
+if __name__ == "__main__":
+    main()
+    

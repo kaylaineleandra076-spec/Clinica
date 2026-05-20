@@ -4,6 +4,9 @@ base = Path(__file__).parent
 from banco import ler_json , salvar_json
 from datetime import date
 
+def listar_consultas_do_dia():
+    raise NotImplementedError
+
 def painel_recepcionista(usuario):
     from RelatRecepcionista import (
         historico_paciente,
@@ -49,7 +52,7 @@ def painel_recepcionista(usuario):
         elif opc == '8':
             confirmar_presença()
         elif opc == '9':
-            consultas_do_dia()
+            listar_consultas_do_dia()
         elif opc == '10':
             historico_paciente()
         elif opc == '11':
