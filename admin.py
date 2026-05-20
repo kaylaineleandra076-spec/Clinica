@@ -4,6 +4,45 @@ from pathlib import Path
 base = Path(__file__).parent
 from banco import ler_json, gerar_id, salvar_json
 
+def menu_relatorios():
+    print("=== RELATÓRIOS ===")
+    print("1 - Consultas por período")
+    print("2 - Consultas canceladas")
+    print("3 - Pacientes cadastrados")
+    print("4 - Médicos ativos")
+    print("5 - Consultas por médico")
+    print("6 - Atendimentos do dia")
+    print("7 - Pacientes mais atendidos")
+    print("0 - Voltar")
+
+    op = input("\nEscolha uma opção: ").strip()
+
+    if op == '1':
+        data_inicial = input("Data inicial (YYYY-MM-DD): ")
+        data_final = input("Data final (YYYY-MM-DD): ")
+        relatorio = relatorio_consulta_por_periodo(data_inicial, data_final)
+        for consulta in relatorio:
+            print(consulta)
+    elif op == '2':
+        relatorio_consultas_canceladas()
+    elif op == '3':
+        relatorio_pacientes_cadastrados()
+    elif op == '4':
+        relatorio_medicos_ativos()
+    elif op == '5':
+        medico_id = int(input("ID do médico: "))
+        relatorio = relatorio_consulta_por_medico(medico_id)
+        for consulta in relatorio:
+            print(consulta)
+    elif op == '6':
+        relatorio_atendimento_do_dia()
+    elif op == '7':
+        relatorio_pacientes_mais_atendidos()
+    elif op == '0':
+        return
+    else:
+        print("Opção inválida. Tente novamente.")
+
 def cadastrar_usuario():
 
     print("=== CADASTRO USUÁRIOS ===")
@@ -123,7 +162,7 @@ def listar_usuarios():
             status= "Ativo" if u['ativo'] else "Inativo"
             print(f"ID: {u['id']} | {u['nome']} | {u['login']} | {u['perfil']} | {status}")
 
-def resetar_usuarios():
+def resetar_senha_usuarios():
     print("=== RESETEAR USUÁRIOS ===")
     confirmacao= input("Tem certeza que deseja resetar os usuários? Todos os dados serão perdidos! (s/n): ").strip().lower()
 
