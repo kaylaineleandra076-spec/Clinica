@@ -13,10 +13,10 @@ def salvar_json(arquivo, dados):
         json.dump(dados, f, indent=4, ensure_ascii=False)
 
 def fazer_login():
-    login= input("Digite seu login: ")
-    senha= input("Digite a senha: ")
+    login= input("Digite seu login: ").strip()
+    senha= input("Digite a senha: ").strip()
 
-    usuarios = ler_json('usuario.json')
+    usuarios = ler_json('usuarios.json')
 
     for usuario in usuarios:
         if usuario.get('login') == login and usuario.get('senha') == senha:
@@ -44,13 +44,12 @@ def verificar_permissao(usuario_logado, perfil_necessario):
         print(f"Acesso negado. Apenas '{perfil_necessario}' pode acessar esta função!")
         return False
     
-
 def resetar_senha(login):
     usuarios = ler_json('usuarios.json')
     for usuario in usuarios:
         if usuario.get('login') == login:
-            nova_senha = input("Digite uma nova senha: ")
-            confirmacao = input("Confirme a nova senha: ")
+            nova_senha = input("Digite uma nova senha: ").strip()
+            confirmacao = input("Confirme a nova senha: ").strip()
             if nova_senha != confirmacao:
                 print("As senhas não coincidem. Tente novamente.")
                 return False
@@ -68,30 +67,3 @@ def encerrar_sessao(usuario=None):
         print(f"\nAté logo, {nome}! Sessão encerrada.")
     else:
         print("\nSessão encerrada.")
-
-def gerar_relatorios():
-    print("=== RELATÓRIOS ===")
-    print("1 - Histórico do paciente")
-    print("2 - Agenda do dia")
-    print("3 - Consultas por data")
-    print("4 - Cancelamentos")
-    print("0 - Voltar")
-
-    op = input("\nEscolha uma opção: ").strip()
-
-    if op == '1':
-        from RelatRecepcionista import historico_paciente
-        historico_paciente()
-    elif op == '2':
-        from RelatRecepcionista import relatorio_agenda_dia
-        relatorio_agenda_dia()
-    elif op == '3':
-        from RelatRecepcionista import relatorio_consulta_data
-        relatorio_consulta_data()
-    elif op == '4':
-        from RelatRecepcionista import relatorio_cancelamento
-        relatorio_cancelamento()
-    elif op == '0':
-        return
-    else:
-        print("Opção inválida. Tente novamente.")
