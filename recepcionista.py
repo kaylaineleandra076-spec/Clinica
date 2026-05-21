@@ -286,3 +286,32 @@ def consultas_do_dia():
         nome_p = paciente.get('nome') if paciente else 'Paciente Desconhecido'
         nome_m = medico.get('nome') if medico else 'Médico Desconhecido'
         print(f"{c.get('horario')} | {nome_p} | Dr(a). {nome_m} | {c.get('status')}")
+
+def menu_relatorios():
+    print("=== RELATÓRIOS ===")
+    print("1 - Histórico do paciente")
+    print("2 - Agenda do dia")
+    print("3 - Consultas por data")
+    print("4 - Cancelamentos")
+    print("0 - Voltar")
+
+    op = input("\nEscolha uma opção: ").strip()
+
+    if op == '1':
+        from RelatRecepcionista import historico_paciente
+        historico_paciente()
+    elif op == '2':
+        from RelatRecepcionista import relatorio_agenda_dia
+        relatorio_agenda_dia()
+    elif op == '3':
+        from RelatRecepcionista import relatorio_consulta_data
+        relatorio_consulta_data()
+    elif op == '4':
+        from RelatRecepcionista import relatorio_cancelamento
+        relatorio_cancelamento()
+    elif op == '0':
+        return
+    else:
+        print("Opção inválida. Tente novamente.")
+
+#prontuarios
