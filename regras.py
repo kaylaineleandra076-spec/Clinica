@@ -1,3 +1,4 @@
+from datetime import date
 import json
 from pathlib import Path
 from banco import ler_json
@@ -6,15 +7,16 @@ base = Path(__file__).parent
 def verificar_conflito_horario(medico_id, data, horario):
     consultas = ler_json("consultas.json")
     for consulta in consultas:
-        if consulta["medico_id"] == medico_id and consulta["data"] == data and consulta["horario"] == horario:
+        if consulta.get("status") == "Cancelada":
+            continue
+        if (consulta['medico_id']) == medico_id and consulta['data'] == data and consulta['horario'] == horario:
             return True
     return False
 
 def verificar_data_passada(data):
-    hoje = "2026-06-05"
-    if data < hoje:
-        return True
-    return False
+    hoje = date.today().isoformat()
+    return data < hoje
+
 
 def medico_existe(medico_id):
     medicos = ler_json("medicos.json")
@@ -31,16 +33,13 @@ def paciente_existe(paciente_id):
     return False
 
 def validar_status_para_iniciar(consulta):
-    if consulta["status"] == "agendada":
-        return True
-    return False
+    return consulta["status"] in ("Agendada", "Confirmada")
+     
 
 def validar_status_para_finalizar(consulta):
-    if consulta["status"] == "em andamento":
-        return True
-    return False
+    return consulta["status"] == "em Atendimento"
+    
 
 def validar_status_para_prontuario(consulta):
-    if consulta["status"] == "finalizada":
-        return True
-    return False
+    return consulta["status"] == "Em Atendimento"
+        
