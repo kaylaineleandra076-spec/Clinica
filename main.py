@@ -1,49 +1,50 @@
-from auth import fazer_login, encerrar_sessao, gerar_relatorios, verificar_permissao
+from auth import fazer_login, encerrar_sessao, verificar_permissao
 import admin
 import recepcionista
 import medico
 
 def menu_administrador():
-    print("=== MENU ADMINISTRADOR === ")
-    print("1 - Cadastrar usuário")
-    print("2 - Editar usuário")
-    print("3 - Excluiur usuario")
-    print("4 - Resetar senha de usuario")
-    print("5 - Listar usuarios")
-    print("6 - Cadastrar médico")
-    print("7 - Editar médico")
-    print("8 - Excluir médico")
-    print("9 - Listar médicos")
-    print("10 - Relatórios")
-    print("0 - Sair")
+    while True:
+        print("=== MENU ADMINISTRADOR === ")
+        print("1 - Cadastrar usuário")
+        print("2 - Editar usuário")
+        print("3 - Excluiur usuario")
+        print("4 - Resetar senha de usuario")
+        print("5 - Listar usuarios")
+        print("6 - Cadastrar médico")
+        print("7 - Editar médico")
+        print("8 - Excluir médico")
+        print("9 - Listar médicos")
+        print("10 - Relatórios")
+        print("0 - Sair")
 
-    op= input("\nEscolha uma opção").strip()
+        op= input("\nEscolha uma opção").strip()
 
-    if op == '1':
-        admin.cadastrar_usuario()
-    elif op == '2':
-        admin.editar_usuario()
-    elif op == '3':
-        admin.excluir_usuario()
-    elif op == '4':
-        admin.resetar_senha_usuarios()
-    elif op == '5':
-        admin.listar_usuarios()
-    elif op == '6':
-        admin.cadastrar_medico()
-    elif op == '7':
-        admin.editar_medico()
-    elif op == '8':
-        admin.excluir_medico()
-    elif op == '9':
-        admin.listar_medicos()
-    elif op == '10':
-        admin.menu_relatorios()
-    elif op == '0':
-        encerrar_sessao()
-        exit()
-    else:
-        print("Opção inválida. Tente novamente.")
+        if op == '1':
+            admin.cadastrar_usuario()
+        elif op == '2':
+            admin.editar_usuario()
+        elif op == '3':
+            admin.excluir_usuario()
+        elif op == '4':
+            admin.resetar_senha_usuarios()
+        elif op == '5':
+            admin.listar_usuarios()
+        elif op == '6':
+            admin.cadastrar_medico()
+        elif op == '7':
+            admin.editar_medico()
+        elif op == '8':
+            admin.excluir_medico()
+        elif op == '9':
+            admin.listar_medicos()
+        elif op == '10':
+            admin.menu_relatorios()
+        elif op == '0':
+            encerrar_sessao()
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
 
 def menu_recepcionista(usuario):
     while True:
@@ -77,22 +78,17 @@ def menu_recepcionista(usuario):
         elif op == '7':
             recepcionista.cancelar_consulta()
         elif op == '8':
-            recepcionista.confirmar_presença()
+            recepcionista.confirmar_presenca()
         elif op == '9':
             recepcionista.listar_consultas_do_dia()
         elif op == '10':
             recepcionista.menu_relatorios()
         elif op == '0':
             encerrar_sessao()
-            exit()
+            break
         else:
             print("Opção inválida. Tente novamente.")
-            break
-
-
-
-
-    # recepcionista.painel_recepcionista(usuario)
+            
 
 def menu_medico(usuario):
     while True:
@@ -120,27 +116,27 @@ def menu_medico(usuario):
         elif op == '5':
             medico.registrar_prontuario(usuario['id'])
         elif op == '6':
-            medico.ver_prontuario_paciente(usuario['id'])
+            medico.ver_prontuarios_paciente(usuario['id'])
         elif op == '7':
             medico.buscar_historico_paciente(usuario['id'])
         elif op == '8':
             medico.menu_relatorios(usuario['id'])
         elif op == '0':
             encerrar_sessao()
-            exit()
+            break
         else:
             print("Opção inválida. Tente novamente.")
-            break
 
 
 def main():
-        
+    while True:
         usuario_logado = fazer_login()
         if not usuario_logado:
             tentar = input('\nDeseja tentar login novamente? (s/n): ').strip().lower()
             if tentar != 's':
                 print('Saindo.')
-                return
+                break
+            continue
 
         print('Acesso Liberado!')
 
@@ -154,6 +150,8 @@ def main():
         else:
             print('Perfil desconhecido. Encerrando sessão.')
             encerrar_sessao()
+            break
+
 if __name__ == "__main__":
     main()
     
