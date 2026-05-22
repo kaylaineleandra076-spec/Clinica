@@ -111,7 +111,7 @@ def registrar_prontuario(medico_id, consulta_id):
     else:
         print(f"Prontuário só pode ser registrado para consultas finalizadas. Status atual: '{consulta['status']}'.")
 
-def ver_prontuario_paciente(medico_id, consulta_id):
+def ver_prontuarios_paciente(medico_id, consulta_id):
     print("===== VER PRONTUÁRIO DO PACIENTE ======")
     consultas = ler_json("consultas.json")
     medicos   = ler_json("medicos.json")

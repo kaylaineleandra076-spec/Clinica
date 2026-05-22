@@ -239,7 +239,7 @@ def cancelar_consulta():
 
     print("Consulta cancelada com sucesso!")
 
-def confirmar_presença():
+def confirmar_presenca():
     consultas = ler_json('consultas.json')
     pacientes = ler_json('pacientes.json')
     hoje = str(date.today())
