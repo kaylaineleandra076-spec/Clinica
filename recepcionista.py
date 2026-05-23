@@ -144,8 +144,6 @@ def listar_pacientes():
         print(f"CPF: {paciente['CPF']}")
         print("==========================")
 
-#Gestao de consultas:
-
 def gerar_id(lista):
     if not lista:
         return 1
@@ -313,5 +311,3 @@ def menu_relatorios():
         return
     else:
         print("Opção inválida. Tente novamente.")
-
-#prontuarios
