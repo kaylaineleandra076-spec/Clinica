@@ -78,7 +78,7 @@ def cadastrar_usuario():
     
     perfil= perfis[op]
 
-    novo_id= gerar_id(usuarios)
+    novo_id= gerar_id('usuarios.json')
 
     novo_usuario= {
         'id': novo_id,
@@ -109,19 +109,30 @@ def editar_usuario():
         print(f"ID: {u['id']} | {u['nome']} | {u['login']} | {u['perfil']} | {status}")
 
         id_alvo= input("\n Digite o ID do usuário que deseja editar: ").strip()
+        usuario = next((u for u in usuarios if u['id'] == id_alvo), None)
 
-        usuario_encontrado = None
-        for usuario in usuarios: 
-            if usuario['id'] == id_alvo:
-                usuario_encontrado = usuario
-                break
-
-        if not usuario_encontrado:
+        if not usuario:
             print("Usuario não encontrado!")
-            False
-        
+            return
         
         print("\nDeixe em branco para mostrar o valor atual.")
+        nome= input(f"Nome ({usuario['nome']}): ").strip()
+        login= input(f"Login ({usuario['login']}): ").strip()
+        perfil= input(f"Perfil ({usuario['perfil']}): ").strip()
+        ativo= input(f"Ativo (s/n) ({'s' if usuario['ativo'] else 'n'}): ").strip().lower()
+
+        if nome:
+            usuario['nome'] = nome
+        if login:
+            usuario['login'] = login
+        if perfil:
+            usuario['perfil'] = perfil
+        if ativo == 's':
+            usuario['ativo'] = True
+        elif ativo == 'n':
+            usuario['ativo'] = False
+        salvar_json('usuarios.json', usuarios)
+        print(f"\n Usuario '{usuario['nome']}' atualizado com sucesso!")
 
 def excluir_usuario():
 
@@ -164,16 +175,20 @@ def listar_usuarios():
 
 def resetar_senha_usuarios():
     print("=== RESETEAR USUÁRIOS ===")
-    confirmacao= input("Tem certeza que deseja resetar os usuários? Todos os dados serão perdidos! (s/n): ").strip().lower()
+    login= input("Digite o login do usuário para resetar a senha: ").strip()
+    usuarios= ler_json('usuarios.json')
 
-    if confirmacao == 's':
-        salvar_json('usuarios.json', [])
-        print("Todos os usuários foram resetados com sucesso!")
-        return True
-    else:
-        print("Operação cancelada.")
-        return False
-
+    for usuario in usuarios:
+        if usuario.get['login'] == login:
+            nova_senha= input('Digite a nova senha: ').strip()
+            confirmacao= input("Confirme a nova senha: ").strip()
+            if nova_senha != confirmacao:
+                print("As senhas não coincidem. Operação cancelada.")
+                return False
+            usuario['senha'] = nova_senha
+            salvar_json('usuarios.json', usuarios)
+            print(f"Senha do usuário '{usuario['nome']}' resetada com sucesso!")
+            return True
 # MÉDICOS   
 
 
@@ -186,7 +201,7 @@ def cadastrar_medico():
     crm = input("CRM: ")
     especialidade = input("Especialidade: ")
 
-    medico_id = max([m["id"] for m in medicos], default=0) + 1
+    medico_id = gerar_id('medicos.json')
 
     novo_medico = {
         "id": medico_id,
@@ -195,7 +210,7 @@ def cadastrar_medico():
         "especialidade": especialidade,
         "ativo": True
     }
-
+    medicos = ler_json('medicos.json')
     medicos.append(novo_medico)
     salvar_json('medicos.json', medicos)
 
@@ -226,8 +241,6 @@ def editar_medico():
     print("=== EDITAR MÉDICO ===")
 
     medicos = ler_json('medicos.json')
-    
-
     listar_medicos()
 
     try:
@@ -268,12 +281,10 @@ def editar_medico():
     print("Médico atualizado com sucesso!")
 
 def excluir_medico():
-
     print("=== EXCLUIR MÉDICO ===")
-
     medicos = ler_json('medicos.json')
+    listar_medicos()
     
-
     try:
         id_medico = int(input("ID do Médico a Excluir: "))
     except ValueError:
@@ -311,7 +322,7 @@ def relatorio_consultas_canceladas():
     pacientes = ler_json("pacientes.json")
     medicos = ler_json("medicos.json")
 
-    canceladas = [c for c in consultas if c["status"] == "cancelada"]
+    canceladas = [c for c in consultas if c["status"] == "Cancelada"]
 
     if not canceladas:
         print("Nenhuma consulta cancelada anteriormente.") 
@@ -322,7 +333,7 @@ def relatorio_consultas_canceladas():
         paciente = next((p for p in pacientes if p["id"] == consulta["paciente_id"]), None)
         medico = next((m for m in medicos if m["id"] == consulta["medico_id"]), None)
 
-        nome_paciente = paciente["nome"] if paciente else "Paciente Desconecido"
+        nome_paciente = paciente["nome"] if paciente else "Paciente Desconhecido"
         nome_medico = medico["nome"] if medico else "Médico Desconhecido"
 
         print(f"Consulta ID: {consulta['id']}, Paciente: {nome_paciente}, Médico: {nome_medico}, Data: {consulta['data']}, Horário: {consulta['horario']}")
@@ -332,7 +343,6 @@ def relatorio_pacientes_cadastrados():
 
     pacientes = ler_json('pacientes.json')
     print(f"Total de pacientes cadastrados: {len(pacientes)}")
-    print(f"Total de pacientes cadastrador: {len('pacientes.josn')}")
 
 
 def relatorio_medicos_ativos():
@@ -359,7 +369,7 @@ def relatorio_atendimento_do_dia():
     pacientes = ler_json("pacientes.json")
     medicos = ler_json('medicos.json')
 
-    hoje_consultas = [c for c in consultas if consultas if c['datas'] == hoje]
+    hoje_consultas = [c for c in consultas if c['data'] == hoje]
     
     if not hoje_consultas:
         print("Nenhuma consulta agendada para hoje.")
@@ -368,9 +378,10 @@ def relatorio_atendimento_do_dia():
 
     for c in sorted(hoje_consultas, key= lambda x: x['horario']):
         paciente = next((p for p in pacientes if p['id'] == c['pacientes_id']), None)
-        medico = next((m for m in medicos  if m['id'] == m['medico_id']), None)
-
-        print(f"{c['horario']} | {paciente['nome']} | Dr(a). {medico['nome']} | {c['status']}")
+        medico = next((m for m in medicos  if m['id'] == c['medico_id']), None)
+        nome_paciente= paciente['nome'] if paciente else "Paciente Desconhecido"
+        nome_medico= medico['nome'] if medico else "Médico Desconhecido"
+        print(f"Horário: {c['horario']} | Paciente: {nome_paciente} | Médico: {nome_medico} | Status: {c['status']}")
 
 def relatorio_pacientes_mais_atendidos():
     print("=== PACIENTES MAIS ATENDIDOS ===")
@@ -389,8 +400,8 @@ def relatorio_pacientes_mais_atendidos():
     for c in finalizadas:
         contagem[c['paciente_id']] = contagem.get(c['paciente_id'], 0) + 1
 
-        ranking= sorted(contagem.items(), key=lambda x: x[1], reverse=True)
+    ranking= sorted(contagem.items(), key=lambda x: x[1], reverse=True)
 
-        for i, (pid, total) in enumerate(ranking, start=1):
+    for i, (pid, total) in enumerate(ranking, start=1):
             paciente = next((p for p in pacientes if p['id'] == pid), None)
             print(f"{i}. {paciente['nome']} | {total} atendimentos")
