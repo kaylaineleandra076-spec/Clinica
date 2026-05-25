@@ -7,7 +7,7 @@ base = Path(__file__).parent
 def ler_json(arquivo):
     caminho = base / 'jsons' / arquivo
     try:
-        with open(caminho, 'r', enconding= 'utf-8') as f:
+        with open(caminho, 'r', encoding= 'utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
         print(f"Arquivo '{arquivo}' não encontrado. Criando um novo arquivo vazio.")
