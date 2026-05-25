@@ -18,7 +18,7 @@ def menu_administrador():
         print("10 - Relatórios")
         print("0 - Sair")
 
-        op= input("\nEscolha uma opção").strip()
+        op= input("\nEscolha uma opção: ").strip()
 
         if op == '1':
             admin.cadastrar_usuario()
@@ -61,7 +61,7 @@ def menu_recepcionista(usuario):
         print("10 - Relatorio")
         print("0 - Sair")
 
-        op = input("\nEscolha uma opção").strip()
+        op = input("\nEscolha uma opção: ").strip()
 
         if op == '1':
             recepcionista.cadastrar_paciente()
@@ -103,7 +103,7 @@ def menu_medico(usuario):
         print("8 - Relatórios")
         print("0 - Sair")
 
-        op= input("\nEscolha uma opção").strip()
+        op= input("\nEscolha uma opção: ").strip()
 
         if op == '1':
             medico.ver_agenda_hoje(usuario['id'])
@@ -141,14 +141,14 @@ def main():
         print('Acesso Liberado!')
 
         perfil = usuario_logado.get('perfil')
-        if perfil == 'administrador':
+        if perfil == 'administrador' and verificar_permissao(usuario_logado, 'administrador'):
             menu_administrador()
-        elif perfil == 'recepcionista':
+        elif perfil == 'recepcionista' and verificar_permissao(usuario_logado, 'recepcionista'):
             menu_recepcionista(usuario_logado)
-        elif perfil == 'medico':
+        elif perfil == 'medico' and verificar_permissao(usuario_logado, 'medico'):
             menu_medico(usuario_logado)
         else:
-            print('Perfil desconhecido. Encerrando sessão.')
+            print('Perfil desconhecido ou sem permissão. Encerrando sessão.')
             encerrar_sessao()
             break
 

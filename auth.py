@@ -1,18 +1,7 @@
-import json
-from pathlib import Path
-base = Path(__file__).parent
 from banco import ler_json , salvar_json
 
-def ler_json(arquivo):
-    caminho= base / arquivo
-    with open(caminho, 'r', encoding='utf-8') as f:
-        return json.load(f)
-def salvar_json(arquivo, dados):
-    caminho= base / arquivo
-    with open(caminho, 'w', encoding='utf-8') as f:
-        json.dump(dados, f, indent=4, ensure_ascii=False)
-
 def fazer_login():
+    print("=== LOGIN ===")
     login= input("Digite seu login: ").strip()
     senha= input("Digite a senha: ").strip()
 
